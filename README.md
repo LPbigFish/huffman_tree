@@ -7,7 +7,7 @@ Huffman coding for Elixir. Encode strings to compact bitstrings, decode them bac
 From GitHub:
 
 ```elixir
-{:huffman_tree, git: "https://github.com/USER/huffman_tree.git"}
+{:huffman_tree, git: "https://github.com/LPbigFish/huffman_tree.git"}
 ```
 
 ## Usage

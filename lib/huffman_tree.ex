@@ -66,11 +66,13 @@ defmodule HuffmanTree do
   Decode a bitstring using the provided Huffman tree.
   """
   @spec decode(bitstring(), non_neg_integer(), Tree.t()) :: binary()
+  def decode(_bitstring, _bit_size, %Tree{root: nil}), do: ""
+
   def decode(bitstring, bit_size, tree) do
     decode_helper(bitstring, bit_size, tree.root, tree.root, [])
   end
 
-  defp decode_helper(_bitstring, 0, _current_node, _root, acc) do
+  defp decode_helper(_bitstring, 0, %{value: nil}, _root, acc) do
     acc |> Enum.reverse() |> Enum.join()
   end
 

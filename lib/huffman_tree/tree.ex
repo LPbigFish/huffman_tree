@@ -61,11 +61,24 @@ defmodule HuffmanTree.Tree do
   """
   @spec from_text(String.t()) :: t()
   def from_text(text) do
-    text
-    |> get_counts()
-    |> build_nodes()
-    |> build_tree()
-    |> new()
+    root =
+      text
+      |> get_counts()
+      |> build_nodes()
+      |> case do
+        # ponytail: empty text -> nil root; decode/3 returns "" for it.
+        [] -> nil
+        # ponytail: single distinct symbol gets a 1-bit code (<<0::1>>) so decode
+        # can count symbols; a bare leaf would map to <<>> and loop forever.
+        [single] -> wrap_single(single)
+        nodes -> build_tree(nodes)
+      end
+
+    new(root)
+  end
+
+  defp wrap_single(node) do
+    %{Node.new(node.weight, nil) | left: node, right: nil}
   end
 
   defp dfs_helper(nil, _path, acc), do: acc
@@ -129,8 +142,8 @@ defmodule HuffmanTree.Tree do
     new(root)
   end
 
-  defp deserialize_helper(<<1::size(1), value::size(8), rest::bitstring>>) do
-    node = %Node{weight: 0, value: <<value::utf8>>, left: nil, right: nil}
+  defp deserialize_helper(<<1::size(1), codepoint::utf8, rest::bitstring>>) do
+    node = %Node{weight: 0, value: <<codepoint::utf8>>, left: nil, right: nil}
     {node, rest}
   end
 

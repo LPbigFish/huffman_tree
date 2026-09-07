@@ -66,10 +66,7 @@ defmodule HuffmanTree.Tree do
       |> get_counts()
       |> build_nodes()
       |> case do
-        # ponytail: empty text -> nil root; decode/3 returns "" for it.
         [] -> nil
-        # ponytail: single distinct symbol gets a 1-bit code (<<0::1>>) so decode
-        # can count symbols; a bare leaf would map to <<>> and loop forever.
         [single] -> wrap_single(single)
         nodes -> build_tree(nodes)
       end
